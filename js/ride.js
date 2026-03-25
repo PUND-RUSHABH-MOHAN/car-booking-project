@@ -41,7 +41,9 @@ WildRydes.map = WildRydes.map || {};
     function completeRequest(result) {
         var unicorn;
         var pronoun;
-        console.log('Response received from API: ', result);
+        if (typeof result === "string") {
+            result = JSON.parse(result);
+        }
         unicorn = result.Unicorn;
         pronoun = unicorn.Gender === 'Male' ? 'his' : 'her';
         displayUpdate(unicorn.Name + ', your ' + unicorn.Color + ' unicorn, is on ' + pronoun + ' way.');
@@ -53,7 +55,6 @@ WildRydes.map = WildRydes.map || {};
         });
     }
 
-    // Register click handler for #request button
     $(function onDocReady() {
         $('#request').click(handleRequestClick);
         $('#signOut').click(function() {
@@ -65,8 +66,9 @@ WildRydes.map = WildRydes.map || {};
 
         WildRydes.authToken.then(function updateAuthMessage(token) {
             if (token) {
-                displayUpdate('You are authenticated. Click to see your <a href="#authTokenModal" data-toggle="modal">auth token</a>.');
-                $('.authToken').text(token);
+                $('#authStatus').html(
+                  'You are authenticated. Click to see your <a href="#authTokenModal" data-toggle="modal">auth token</a>.<br><span class="authToken">' +
+                  token + '</span>');
             }
         });
 
