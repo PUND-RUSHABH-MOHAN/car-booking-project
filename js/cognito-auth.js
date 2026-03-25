@@ -69,9 +69,41 @@
         );
     }
 
+    // Sign-In Logic
+    function signin(email, password, onSuccess, onFailure) {
+        var authenticationDetails = new AmazonCognitoIdentity.AuthenticationDetails({
+            Username: email,
+            Password: password
+        });
+        var cognitoUser = new AmazonCognitoIdentity.CognitoUser({
+            Username: email,
+            Pool: userPool
+        });
+        cognitoUser.authenticateUser(authenticationDetails, {
+            onSuccess: onSuccess,
+            onFailure: onFailure
+        });
+    }
+
+    function handleSignin(event) {
+        event.preventDefault();
+        var email = $('#emailInputSignin').val();
+        var password = $('#passwordInputSignin').val();
+        signin(email, password,
+            function signinSuccess() {
+                alert('Successfully Logged In!');
+                window.location.href = 'ride.html';
+            },
+            function signinError(err) {
+                alert("Sign-in failed: " + (err.message || JSON.stringify(err)));
+            }
+        );
+    }
+
     // Attach event handlers
     $(function() {
         $('#registrationForm').submit(handleRegister);
         $('#verifyForm').submit(handleVerify);
+        $('#signinForm').submit(handleSignin);
     });
 })();
