@@ -6,6 +6,7 @@
     };
     var userPool = new AmazonCognitoIdentity.CognitoUserPool(poolData);
 
+    // Registration Logic
     function register(email, password, onSuccess, onFailure) {
         var attributeEmail = new AmazonCognitoIdentity.CognitoUserAttribute({ Name: 'email', Value: email });
         userPool.signUp(email, password, [attributeEmail], null, function(err, result) {
@@ -38,7 +39,39 @@
         );
     }
 
+    // Verification Logic
+    function verify(email, code, onSuccess, onFailure) {
+        var cognitoUser = new AmazonCognitoIdentity.CognitoUser({
+            Username: email,
+            Pool: userPool
+        });
+        cognitoUser.confirmRegistration(code, true, function(err, result) {
+            if (!err) {
+                onSuccess(result);
+            } else {
+                onFailure(err);
+            }
+        });
+    }
+
+    function handleVerify(event) {
+        event.preventDefault();
+        var email = $('#emailInputVerify').val();
+        var code = $('#codeInputVerify').val();
+        verify(email, code,
+            function(result) {
+                alert('Verification successful! You can now log in.');
+                window.location.href = 'signin.html';
+            },
+            function(err) {
+                alert(err.message || JSON.stringify(err));
+            }
+        );
+    }
+
+    // Attach event handlers
     $(function() {
         $('#registrationForm').submit(handleRegister);
+        $('#verifyForm').submit(handleVerify);
     });
 })();
