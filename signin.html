@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
@@ -55,5 +57,16 @@
         <script src="js/vendor/amazon-cognito-identity.min.js"></script>
         <script src="js/config.js"></script>
         <script src="js/cognito-auth.js"></script>
+        <script>
+        console.log("JQUERY TYPE:", typeof $);
+        console.log("FORM EXISTS:", document.getElementById('signinForm'));
+        $(function() { 
+        console.log("JQUERY READY FIRED");
+        $('#signinForm').submit(function() {
+        alert("SIGNIN HANDLER TEST FIRING!");
+        return false;
+          });
+       });
+      </script>
     </body>
 </html>
